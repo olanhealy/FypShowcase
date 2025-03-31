@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Olan Healy - FYP Showcase</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        line-height: 1.6;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-weight: 700;
+      }
+
+      .section-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .img-fluid rounded shadow {
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      .rounded-box {
+        background-color: #1e293b;
+        border-radius: 1rem;
+        padding: 2rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .rounded-box:hover {
+        transform: scale(1.01);
+      }
+
+      .footer {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        padding: 2rem 0;
+        text-align: center;
+      }
+
+      ul li {
+        padding-bottom: 0.5rem;
+      }
+
+      .fade-in-up {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.8s ease-out forwards;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container py-5">
+      <!-- Header -->
+      <div class="text-center mb-5 fade-in-up">
+        <h1 class="display-4 fw-bold">Context-Aware Bug Localisation</h1>
+        <p class="lead">Using CodeBERT for Pre-Commit Java Project Analysis</p>
+        <p class="text">Demo Day</p>
+      </div>
+
+<!-- Introduction -->
+<section class="mb-5 fade-in-up">
+    <h2 class="section-title"><i class="bi bi-flag-fill"></i> Introduction</h2>
+    <div class="rounded-box">
+      <p>
+        This project explores whether a <strong>context-aware, classification-based CodeBERT model</strong> can effectively identify buggy lines in Java code before they are committed to production.. The core idea is to assist developers in detecting issues at the source level, during the pre-commit phase. It does this by leveraging the surrounding code context, commit messages, and prior code snippets (line changed).
+      </p>
+      <p>
+        The research is guided by the following question:<br />
+        <em>Can a context-aware, classification-based CodeBERT model effectively localise pre-commit Java bugs using source-level inputs, and how does its performance compare to recent bug localisation approaches?</em>
+      </p>
+      <p>
+        The primary goals of the project are:
+        <ul>
+          <li>To fine-tune <strong>CodeBERT</strong> for line-level bug detection</li>
+          <li>To evaluate the model’s performance on dedicated test datasets</li>
+          <li>To compare metrics and evalute against prior bug localisation studies</li>
+        </ul>
+      </p>
+    </div>
+  </section>
+  
+
+  <div class="rounded-box fade-in-up">
+    <p>
+      I conducted a thorough review of recent academic studies and industry research to ground this project in the current state of bug localisation. The review focused on the evolution of bug localisation—from traditional static analysis tools to state-of-the-art Large Language Models (LLMs)—and informed my decision to use CodeBERT for pre-commit Java bug detection.
+    </p>
+  
+    <h5 class="mt-4">Large Language Models (LLMs)</h5>
+    <p>
+      LLMs like BERT, GPT, and CodeBERT are based on the Transformer architecture introduced by Vaswani et al. These models allow for parallel processing of code and natural language, capturing long-range dependencies and semantic meaning—crucial for tasks like bug localisation. The ability to interpret both code syntax and developer-written commit messages makes them especially powerful for context-aware systems.
+    </p>
+  
+    <h5 class="mt-4">CodeBERT</h5>
+    <p>
+      CodeBERT, developed by Microsoft, is pre-trained on millions of code-text pairs and supports six programming languages, including Java. Its training objectives—Masked Language Modelling (MLM) and Replaced Token Detection (RTD)—enable it to learn code semantics and spot subtle errors in code. Given its strong results on tasks like code summarisation, retrieval, and bug repair, CodeBERT was selected as the backbone of my classification model.
+    </p>
+  
+    <h5 class="mt-4">Previous Studies on Bug Localisation</h5>
+    <ul>
+      <li>
+        <strong>Ciborowska & Damevski (2022)</strong> used BERT with commit-level encodings for bug localisation. Their work showed the importance of incorporating commit messages and diffs, which I extended further in my model’s context fields.
+      </li>
+      <li>
+        <strong>Mashhadi & Hemmati (2021)</strong> fine-tuned CodeBERT on ManySStuBs4J for bug repair and localisation. Their results showed high performance on repeated bugs but highlighted challenges on unique ones—directly influencing my focus on generalisation.
+      </li>
+      <li>
+        <strong>Zhang et al. (2024)</strong> proposed WELL, a weakly supervised localisation system. Their method demonstrates how useful coarse-grained binary labels can be when fine-grained annotations are missing—offering future direction for scaling bug localisation systems.
+      </li>
+      <li>
+        <strong>RL-Locator (Chakraborty et al., 2024)</strong> introduced reinforcement learning to iteratively improve localisation. Though out of scope for this project, it showed the value of feedback-driven localisation systems for evolving codebases.
+      </li>
+    </ul>
+  
+    <h5 class="mt-4">Summary</h5>
+    <p>
+      This literature review confirmed that while traditional static tools like SonarQube offer basic rule-based bug detection, they lack contextual awareness and are prone to false positives. Modern LLM-based methods outperform them by incorporating syntax, semantics, and context. CodeBERT’s dual-modality and extensibility made it the ideal model for my project’s goal: pre-commit, context-aware bug localisation for Java code.
+    </p>
+  </div>
+  
+<!-- Methodology -->
+<section class="mb-5 fade-in-up">
+  <h2 class="section-title"><i class="bi bi-diagram-3-fill"></i> Methodology</h2>
+  <div class="rounded-box">
+    <p>
+      The <strong>ManySStuBs4J</strong> dataset was used, with its <strong>repetition</strong> and <strong>unique</strong> subsets providing two evaluation perspectives. The model was trained and validated solely on the repetition subset, which includes recurring bug patterns. The unique subset—which contained non-redundant, novel bugs—was held out entirely and used only for independent testing to evaluate generalisation. All examples were enhanced with rich context, including commit messages, file history, and surrounding code.
+    </p>
+
+    <h5 class="mt-4">🧾 Dataset Preparation</h5>
+    <p>
+      The ManySStuBs4J dataset came in two forms: <strong>repetition</strong> and <strong>unique</strong> subsets. These splits help evaluate both common bug patterns and generalisation to novel ones. All examples were enhanced with additional context, such as commit messages and nearby lines of code, making them suitable for input into a transformer-based classifier.
+    </p>
+
+    <h5 class="mt-4">📦 Input Formatting</h5>
+    <p>
+      Each training example was converted into a structured format to provide the model with broader context around the buggy line. Four key fields were included:
+    </p>
+    <ul>
+      <li><code>[CONTEXT]</code> – Nearby lines of code (before/after)</li>
+      <li><code>[SNIPPET]</code> – The line suspected to be buggy</li>
+      <li><code>[COMMIT]</code> – Commit message associated with the fix</li>
+      <li><code>[PARENT]</code> – Commit message from the previous commit</li>
+    </ul>
+    <p>
+      Identifiers were masked (e.g. <code>VAR1</code>, <code>VAR2</code>) to reduce bias and improve model generalisation across different projects.
+    </p>
+
+    <div class="text-center mt-4">
+      <img src="images/tokenisation.png" class="img-fluid rounded shadow" style="max-width: 700px; width: 100%;" alt="Tokenisation Visual" />
+      <p class="text-muted mt-2" style="font-size: 0.9rem;">
+        Figure: Example of identifier masking used in the input formatting step. Variable names are replaced with placeholders like <code>VAR1</code> to avoid overfitting on specific projects.
+      </p>
+    </div>
+    
+  </div>
+</section>
+
+  
+  
+<!-- Model & Training -->
+<section class="mb-5 fade-in-up">
+  <h2 class="section-title"><i class="bi bi-cpu-fill"></i> Model & Training Pipeline</h2>
+  <div class="rounded-box">
+    <p>
+      The model is based on <strong>CodeBERT</strong>, a pre-trained transformer with 12 layers. For this project, the full transformer was frozen except for the <strong>embedding layer</strong>, allowing it to adapt to custom special tokens like <code>[CONTEXT]</code> and <code>[SNIPPET]</code>.
+    </p>
+    <p>
+      A custom classification head was added on top, consisting of two linear layers with <code>ReLU</code> activation and <code>Dropout</code> for regularisation. The model outputs a binary prediction indicating whether the input line is buggy or not.
+    </p>
+
+    <div class="text-center mt-4">
+      <img src="images/codebert_pipeline.png" class="img-fluid rounded shadow" style="max-width: 700px; width: 100%;" alt="Model Architecture" />
+      <p class="text-muted mt-2" style="font-size: 0.9rem;">
+        Figure: Internal architecture of the model. Enhanced inputs are tokenised, passed through a partially frozen CodeBERT encoder, then through a custom classification head to generate a bug prediction.
+      </p>
+    </div>
+
+    <p class="mt-4">
+      To prevent overfitting, a custom <code>MultiEvalTrainer</code> class was used to monitor both validation loss and performance on a held-out portion of the training data. Training was capped at 50 epochs with early stopping triggered by stagnating validation F1.
+    </p>
+  </div>
+</section>
+
+  
+<!-- Training Progress -->
+<section class="mb-5 fade-in-up">
+  <h2 class="section-title"><i class="bi bi-graph-up"></i> Training Progress</h2>
+  <div class="rounded-box">
+    <p>
+      The training dashboard below captures the full trajectory of the model over ~100,000 training steps. The left column shows strong loss convergence — training loss steadily declined without sudden spikes, and evaluation loss on both training and validation subsets also decreased smoothly. This suggests stable learning dynamics and no evidence of catastrophic overfitting.
+    </p>
+    
+    <p>
+      Accuracy and F1 trends (middle and bottom rows) tell a consistent story. Both metrics improved quickly in the early stages, then plateaued around 80%, aligning with expectations from the ManySStuBs4J dataset. Validation and training curves remained close, confirming generalisation and that the model wasn’t memorising the training data.
+    </p>
+    
+    <p>
+      One of the more interesting findings comes from the <strong>Precision vs Recall</strong plots. Recall was consistently higher than precision across both validation and training sets. This means the model leaned towards identifying most buggy lines (high recall), even if it occasionally flagged false positives — a desirable trait in pre-commit tools where catching bugs is more critical than being overly cautious.
+    </p>
+
+    <p>
+      The learning rate scheduler was also visualised — showing a linear decay strategy from 2e-5 down to near-zero. This slow warm-down likely helped preserve stable weights towards the end of training. Early stopping was based on validation F1, which remained the model’s most consistent performance signal across experiments.
+    </p>
+
+    <p>
+      In summary, the model training process was smooth and well-behaved. Validation curves tracked training closely, F1 was prioritised over pure accuracy, and the final model generalised well to both repetition and unseen test data.
+    </p>
+
+    <img src="images/full_training_dashboard.png" class="img-fluid rounded shadow mt-4" alt="Training Dashboard" />
+  </div>
+</section>
+
+
+  
+  <!-- Evaluation Metrics -->
+  <section class="mb-5 fade-in-up">
+    <h2 class="section-title"><i class="bi bi-bar-chart-line-fill"></i> Evaluation Metrics</h2>
+    <div class="rounded-box">
+      <p>
+        The final model was evaluated on the test split from the <strong>repetition</strong> subset. It achieved strong overall performance, especially in recall — successfully catching the majority of buggy lines.
+      </p>
+      <ul>
+        <li><strong>F1 Score:</strong> 0.80</li>
+        <li><strong>Precision:</strong> 0.73</li>
+        <li><strong>Recall:</strong> 0.87</li>
+      </ul>
+      <p>
+        The confusion matrix below shows that although there are some false positives, the model prioritises catching bugs — a useful trade-off in pre-commit scenarios.
+      </p>
+      <div class="row g-4 mt-4">
+        <div class="col-md-6">
+          <img src="images/metrics_repetition.png" class="img-fluid rounded shadow" alt="Metrics" />
+        </div>
+        <div class="col-md-6">
+          <img src="images/confusion_matrix_repetition.png" class="img-fluid rounded shadow" alt="Confusion Matrix" />
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CLI Prototype -->
+  <section class="mb-5 fade-in-up">
+    <h2 class="section-title"><i class="bi bi-terminal-fill"></i> CLI Prototype Integration</h2>
+    <div class="rounded-box">
+      <p>
+        A CLI prototype was developed to simulate how this model could fit into real software development workflows. The tool intercepts staged diffs, builds structured model input, and returns a real-time prediction before the code is committed.
+      </p>
+      <p>
+        It uses a Git hook + Flask API setup and is fully containerised with Docker, allowing for easy deployment and testing.
+      </p>
+      <div class="text-center mt-4">
+        <img src="images/cli-demo.png" class="img-fluid rounded shadow" style="max-width: 700px; width: 100%;" alt="Model Architecture" />
+        <p class="text-muted mt-2" style="font-size: 0.9rem;">Figure: CLI integration — Git hook intercepts commit and runs CodeBERT bug check in real-time.</p>
+      </div>
+    </div>
+  </section>
+
+<!-- Evaluation -->
+<section class="mb-5 fade-in-up">
+  <h2 class="section-title"><i class="bi bi-bar-chart-fill"></i> Evaluation Summary</h2>
+  <div class="rounded-box">
+
+    <!-- ManySStuBs4J Unique -->
+    <h5 class="mt-4">ManySStuBs4J — Unique Split</h5>
+    <p>
+      The model generalised well to the held-out <em>unique</em> split, achieving <strong>74% Top-1 Accuracy</strong> and an <strong>F1 score of 0.77</strong>. These are promising results given the unseen nature of these bugs and the fact that the model was only trained on repeated patterns.
+    </p>
+    <div class="row g-4 text-center">
+      <div class="col-md-6">
+        <img src="images/metrics_unique.png" class="img-fluid rounded shadow rounded shadow" alt="Metrics Unique" />
+      </div>
+      <div class="col-md-6">
+        <img src="images/confusion_matrix_unique.png" class="img-fluid rounded shadow rounded shadow" alt="Confusion Matrix Unique" />
+      </div>
+    </div>
+
+    <!-- Defects4J -->
+    <h5 class="mt-5">Defects4J Evaluation</h5>
+    <p>
+      To assess real-world generalisability, the model was evaluated on <strong>30 single-line bug examples manually extracted from Defects4J</strong>. This required converting each bug fix into the exact format expected by the model — including <code>[CONTEXT]</code>, <code>[SNIPPET]</code>, <code>[COMMIT]</code>, and <code>[PARENT]</code> fields, along with identifier masking.
+    </p>
+    <p>
+      Many existing studies that report Defects4J results don’t specify how they filtered or preprocessed bugs, leaving ambiguity about whether only trivial cases were selected or how bug boundaries were defined. This makes direct comparison slightly unreliable — but still informative.
+    </p>
+    <p>
+      Even with these limitations, the model achieved <strong>62% Top-1 Accuracy</strong> and an <strong>F1 score of 0.76</strong> — a strong result, especially considering no training was done on this dataset.
+    </p>
+    <div class="row g-4 text-center">
+      <div class="col-md-6">
+        <img src="images/metrics_defects4j.png" class="img-fluid rounded shadow rounded shadow" alt="Metrics Defects4J" />
+      </div>
+      <div class="col-md-6">
+        <img src="images/confusion_matrix_defects4j.png" class="img-fluid rounded shadow rounded shadow" alt="Confusion Matrix Defects4J" />
+      </div>
+    </div>
+
+    <!-- Metric Notes -->
+    <p class="mt-4">
+      <strong>Top-1 Accuracy</strong> refers to whether the model’s highest-confidence prediction is correct — and is a standard metric in bug localisation. Since this model outputs one prediction per input line, Top-1 Accuracy is <em>entirely valid and comparable</em> with existing studies.
+    </p>
+    <p>
+      <strong>MRR</strong> and <strong>MAP</strong> were not computed, as these metrics assume ranked candidate lists or search over an entire file. In contrast, this model performs <strong>binary classification</strong> per line — a different formulation. A ranking-based extension could be added in future work.
+    </p>
+
+    <!-- Comparison Table -->
+    <div class="text-center my-4">
+      <img src="images/table_comparison.png" class="img-fluid rounded shadow rounded shadow" style="max-width: 700px; width: 100%;" alt="Comparison Table" />
+      <p class="text-muted mt-2" style="font-size: 0.9rem;">Figure: Comparison of top-1 accuracy (%) across various bug localisation models and datasets.</p>
+    </div>
+
+    <!-- Analysis -->
+    <p>
+      Many of the studies compared here rely on <strong>multi-line, file-level, or ranked prediction setups</strong>, often using reinforcement learning, complex search spaces, or repair objectives. Despite this, the classification-only model in this project:
+    </p>
+    <ul>
+      <li>Outperformed <strong>Mashhadi et al.</strong> on the exact same unique subset of ManySStuBs4J (74% vs. 23.7%)</li>
+      <li>Achieved comparable results on Defects4J despite no fine-tuning or dataset-specific tuning</li>
+    </ul>
+    <p>
+      Overall, the results support the research question: a <strong>context-aware, classification-based CodeBERT model</strong> trained solely on static, pre-commit information can effectively localise single-line Java bugs and even outperform more complex repair or ranking-based systems on benchmark datasets. However, these findings should be interpreted as a <em>proof of concept</em> rather than a fully generalisable solution. The model’s success in a constrained, single-line classification setting is promising, but broader applicability — especially at the file or multi-line level — would require further training, architectural adaptations, and richer datasets. This project demonstrates clear early-stage feasibility and lays a foundation for future work in lightweight, pre-commit bug localisation.
+    </p>
+
+    <!-- Validity Warnings -->
+    <h5 class="mt-4">⚠️ Threats to Validity</h5>
+    <ul>
+      <li><strong>Granularity:</strong> This project focuses on <em>single-line bug detection</em>. Results from multi-line or hunk-level studies may not be directly comparable.</li>
+      <li><strong>Dataset Filtering:</strong> The exact bug filtering process used in other studies is often unclear, making it hard to ensure comparisons are apples-to-apples.</li>
+      <li><strong>Binary Framing:</strong> A yes/no decision per line avoids ranking, which limits the use of metrics like MAP/MRR.</li>
+      <li><strong>Tool Adoption:</strong> While a working CLI prototype was built, usability and trust still need to be tested with real developers in longer-term settings.</li>
+    </ul>
+
+    <p>
+      In summary, this evaluation shows that even a lightweight model, when carefully fine-tuned and fed rich static context, can generalise across datasets and outperform more complex localisation tools — making it both practical and effective for real-world pre-commit scenarios.
+    </p>
+  </div>
+</section>
+
+
+
+
+      <!-- Footer -->
+      <footer class="footer fade-in-up">
+        Olan Healy — 21318204 <br />
+        BSc Computer Systems — LM051
+      </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
