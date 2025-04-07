@@ -100,7 +100,7 @@
         <h2 class="section-title"><i class="bi bi-flag-fill"></i> Introduction</h2>
         <div class="rounded-box">
           <p>
-            This project investigates whether a <strong>context-aware, classification-based CodeBERT model</strong> can be used to localise pre-commit Java bugs using source-level inputs. It explores how contextual signals—such as surrounding code and commit messages can be used to identify buggy lines of code before they are introduced into a codebase.
+            This project investigates whether a <strong>context-aware, classification-based CodeBERT model</strong> can be used to localise pre-commit Java bugs using source-level inputs. It explores how contextual signals, uch as surrounding code and commit messages can be used to identify buggy lines of code before they are introduced into a codebase.
           </p>
           <p>
             The research is guided by the question:<br>
@@ -113,6 +113,7 @@
             <li>To evaluate the effectiveness of CodeBERT for Java bug localisation</li>
             <li>To incorporate contextual features such as commit messages</li>
             <li>To compare results against recent bug localisation approaches</li>
+            <li>To develop a prototype CLI tool for pre-commit bug detection</li>
           </ul>
         </div>
       </section>
@@ -180,6 +181,33 @@
     </p>
   </div>
 </section>
+
+<!-- CLI Prototype -->
+<section class="mb-5 fade-in-up">
+  <h2 class="section-title"><i class="bi bi-terminal-fill"></i> CLI Prototype Integration</h2>
+  <div class="rounded-box">
+    <p>
+      A working CLI prototype was developed to demonstrate how this bug localisation model could integrate into real-world software workflows. I can show you how it works here, with my demo. The tool intercepts <strong>staged diffs</strong>, builds a structured input sample, and returns a bug prediction <strong>before the code is committed</strong>.
+    </p>
+
+    <p>
+      The system uses a <code>git commit-msg</code> hook and a Flask API backend, containerised with Docker for portability. When triggered, the hook sends the staged diff and commit message to the API, which loads the model and returns a binary prediction.
+    </p>
+
+    <p>
+      It is important to note: <strong>this is a prototype</strong>. The tool has not yet been fully tested across large or diverse codebases.
+    </p>
+
+    <p>
+      This prototype serves as a <em>proof of concept</em>, offering a glimpse into how the model might be embedded into developer workflows, such as Git hooks, CI pipelines, or pre-commit linters.
+    </p>
+
+    <div class="text-center mt-4">
+      <img src="images/cli-demo.png" class="img-fluid rounded shadow" style="max-width: 700px; width: 100%;" alt="Model Architecture" />
+      <p class="text-muted mt-2" style="font-size: 0.9rem;">Figure: CLI integration — Git hook intercepts staged commit and runs a pre-commit CodeBERT bug check.</p>
+    </div>
+  </div>
+</section>
   
 <!-- Methodology -->
 <section class="mb-5 fade-in-up">
@@ -187,7 +215,7 @@
   <div class="rounded-box">
 
     <p>
-      The model was trained using the <strong>ManySStuBs4J</strong> dataset, which contains thousands of real bug-fix commits mined from open-source Java projects. Specifically, the <strong>repetition</strong> subset was used for training, validation, and testing — as it includes all available examples, including duplicates. The <strong>unique</strong> subset was not used in this project because it is a strict deduplicated version of repetition, and thus does not provide additional examples.
+      The model was trained using the <strong>ManySStuBs4J</strong> dataset, which contains thousands of real bug-fix commits mined from open-source Java projects. Specifically, the <strong>repetition</strong> subset was used for training, validation, and testing as it includes the most examples. The <strong>unique</strong> subset was not used in this project because it is a strict deduplicated version of repetition, and thus does not provide additional examples.
     </p>
 
     <p>
@@ -307,36 +335,6 @@
   </div>
 </section>
 
-
-  
-<!-- CLI Prototype -->
-<section class="mb-5 fade-in-up">
-  <h2 class="section-title"><i class="bi bi-terminal-fill"></i> CLI Prototype Integration</h2>
-  <div class="rounded-box">
-    <p>
-      A working CLI prototype was developed to demonstrate how this bug localisation model could integrate into real-world software workflows. I can show you how it works here, with my demo. The tool intercepts <strong>staged diffs</strong>, builds a structured input sample, and returns a bug prediction <strong>before the code is committed</strong>.
-    </p>
-
-    <p>
-      The system uses a <code>git commit-msg</code> hook and a Flask API backend, containerised with Docker for portability. When triggered, the hook sends the staged diff and commit message to the API, which loads the model and returns a binary prediction.
-    </p>
-
-    <p>
-      It is important to note: <strong>this is a prototype</strong>. The tool has not yet been fully tested across large or diverse codebases.
-    </p>
-
-    <p>
-      This prototype serves as a <em>proof of concept</em>, offering a glimpse into how the model might be embedded into developer workflows, such as Git hooks, CI pipelines, or pre-commit linters.
-    </p>
-
-    <div class="text-center mt-4">
-      <img src="images/cli-demo.png" class="img-fluid rounded shadow" style="max-width: 700px; width: 100%;" alt="Model Architecture" />
-      <p class="text-muted mt-2" style="font-size: 0.9rem;">Figure: CLI integration — Git hook intercepts staged commit and runs a pre-commit CodeBERT bug check.</p>
-    </div>
-  </div>
-</section>
-
-
 <section class="mb-5 fade-in-up">
   <h2 class="section-title"><i class="bi bi-bar-chart-fill"></i> Results and Discussion</h2>
   <div class="rounded-box">
@@ -387,12 +385,9 @@
       </div>
     </div>
     <p class="mt-4">
-      Ranking metrics such as <strong>MRR</strong> and <strong>MAP</strong> were not computed, as this model performs <em>binary classification</em> on individual lines. These metrics are only relevant in ranked retrieval settings, which this system does not implement.
+      Ranking metrics such as <strong>MRR</strong> and <strong>MAP</strong> were not computed, as my model performs <em>binary classification</em> on individual lines. These metrics are only relevant in ranked retrieval settings, which my system does not implement.
     </p>
 
-    <p class="mt-4">
-      Ranking metrics such as <strong>MAP</strong> and <strong>MRR</strong> were not computed, as the model performs binary classification on each candidate line independently. These metrics are more appropriate for ranking-based localisation systems.
-    </p>
     <h5 class="mt-5">Comparative Analysis with Prior Studies</h5>
     <p>
       To evaluate how this context-aware classification model compares with recent bug localisation research, results were benchmarked against four representative studies:
@@ -438,7 +433,6 @@
     </p>
     <h5 class="mt-5">Threats to Validity</h5>
     <ul>
-      <li><strong>Dataset Bias:</strong> Training exclusively on the ManySStuBs4J repetition subset risks overfitting to recurring syntactic patterns. The dataset also lacks the diversity and complexity of real-world multi-line bugs.</li>
       <li><strong>Defects4J Filtering:</strong> Only single-line bug fixes were evaluated in Defects4J, with no non-buggy lines included. This inflates precision and limits F1 interpretability.</li>
       <li><strong>Metric Scope:</strong> The model is evaluated using binary classification metrics. MAP and MRR were not used, which limits comparability with ranking-based systems.</li>
       <li><strong>Context Truncation:</strong> Inputs are truncated at 512 tokens. Long methods or verbose commit messages may lead to the loss of key context features.</li>
