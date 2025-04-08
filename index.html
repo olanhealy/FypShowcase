@@ -100,7 +100,7 @@
         <h2 class="section-title"><i class="bi bi-flag-fill"></i> Introduction</h2>
         <div class="rounded-box">
           <p>
-            This project investigates whether a <strong>context-aware, classification-based CodeBERT model</strong> can be used to localise pre-commit Java bugs using source-level inputs. It explores how contextual signals, uch as surrounding code and commit messages can be used to identify buggy lines of code before they are introduced into a codebase.
+            This project investigates whether a <strong>context-aware, classification-based CodeBERT model</strong> can be used to localise pre-commit Java bugs using source-level inputs. It explores how contextual signals, such as surrounding code and commit messages can be used to identify buggy lines of code before they are introduced into a codebase.
           </p>
           <p>
             The research is guided by the question:<br>
@@ -237,7 +237,7 @@
       Each training sample was preprocessed into a context-aware format with four input segments:
     </p>
     <ul>
-      <li><code>[CONTEXT]</code> – Surrounding lines of code (before/after)</li>
+      <li><code>[CONTEXT]</code> – Surrounding lines of code before</li>
       <li><code>[SNIPPET]</code> – The line suspected to be buggy</li>
       <li><code>[COMMIT]</code> – Commit message that fixed the bug</li>
       <li><code>[PARENT]</code> – Commit message of the parent version</li>
